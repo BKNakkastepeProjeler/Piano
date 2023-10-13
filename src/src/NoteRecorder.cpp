@@ -59,7 +59,10 @@ namespace NoteRecorder
         if(!IsRecording) return;
         IsRecording = false;
         StatusLeds::SetLed(LED_RECORDSTATUS, false);
-        delay(100);
+
+        delay(1000);
+
+        PlayRecorded();
     }
 
     unsigned long PreviousNoteEndOffset = 0;
