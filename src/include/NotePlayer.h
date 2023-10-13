@@ -11,4 +11,7 @@
 namespace NotePlayer
 {
     void NoteLoop();
+
+    void PlayNoteSync(int note, unsigned long duration);
+    void StopNote();
 }

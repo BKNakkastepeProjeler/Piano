@@ -8,4 +8,7 @@
 #define PIN_INP6 7
 #define PIN_INP7 8
 
-#define PIN_BUZZER 9
+#define PIN_BUZZER 12
+
+#define BTN_RECORD 9
+#define LED_RECORDSTATUS 13
