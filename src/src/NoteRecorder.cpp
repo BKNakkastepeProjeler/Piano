@@ -10,11 +10,11 @@ namespace NoteRecorder
 
     unsigned long RecordingStartMilis = 0;
 
-    const int MaxNoteCount = 10;
+    const int MaxNoteCount = 30;
 
     int Notes[MaxNoteCount];
-    unsigned short NoteDurations[MaxNoteCount - 1];
-    unsigned int NoteGaps[MaxNoteCount];
+    unsigned short NoteDurations[MaxNoteCount];
+    unsigned int NoteGaps[MaxNoteCount - 1];
 
     int nextNoteIndex = 0;
 
@@ -112,7 +112,11 @@ namespace NoteRecorder
         PreviousNoteEndOffset = NoteEndOffset;
         nextNoteIndex++;
 
-        if(nextNoteIndex == MaxNoteCount) StopRecording();
+        if(nextNoteIndex == MaxNoteCount)
+        {
+            NotePlayer::StopNote();
+            StopRecording();
+        }
     }
 
 }
