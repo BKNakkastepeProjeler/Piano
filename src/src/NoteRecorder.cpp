@@ -14,14 +14,16 @@ namespace NoteRecorder
 
     int Notes[MaxNoteCount];
     unsigned short NoteDurations[MaxNoteCount];
-    unsigned int NoteGaps[MaxNoteCount - 1];
+    unsigned short NoteGaps[MaxNoteCount - 1];
 
     int nextNoteIndex = 0;
 
     void PlayRecorded()
     {
-        if(IsRecording || nextNoteIndex == 0) return;
+        if (IsRecording || nextNoteIndex == 0)
+            return;
 
+        StatusLeds::SetLed(LED_PLAYING, true);
         Serial.print("Playing recorded // Note Count: ");
         Serial.println(nextNoteIndex);
 
@@ -32,22 +34,22 @@ namespace NoteRecorder
 
             Serial.println("Note Index: " + String(i) + " // Duration: " + String(duration) + "// Note: " + String(note));
 
-
             NotePlayer::PlayNoteSync(note, duration);
-            if(i != nextNoteIndex - 1)
+            if (i != nextNoteIndex - 1)
             {
                 Serial.println("Delay: " + String(NoteGaps[i]) + "\n");
 
                 delay(NoteGaps[i]);
             }
         }
-        
-    }
 
+        StatusLeds::SetLed(LED_PLAYING, false);
+    }
 
     void StartRecording()
     {
-        if(IsRecording) return;
+        if (IsRecording)
+            return;
         nextNoteIndex = 0;
         IsRecording = true;
         StatusLeds::SetLed(LED_RECORDSTATUS, true);
@@ -56,59 +58,71 @@ namespace NoteRecorder
 
     void StopRecording()
     {
-        if(!IsRecording) return;
+        if (!IsRecording)
+            return;
         IsRecording = false;
-        StatusLeds::SetLed(LED_RECORDSTATUS, false);
+
+        if (nextNoteIndex == 0)
+            StatusLeds::SetLed(LED_RECORDSTATUS, false);
+        else
+            StatusLeds::BlinkLed(LED_RECORDSTATUS, 5, 100);
     }
 
     unsigned long PreviousNoteEndOffset = 0;
     unsigned long NoteStartOffset = 0;
     int CurrentNote = -1;
 
-
     void NoteBegin(int Note)
     {
-        if(!IsRecording) return;
-        
+        if (!IsRecording)
+            return;
+
         NoteStartOffset = millis() - RecordingStartMilis;
         CurrentNote = Note;
     }
 
     void NoteEnd()
     {
-        if(!IsRecording) return;
+        if (!IsRecording)
+            return;
 
-        unsigned long NoteEndOffset = millis() - RecordingStartMilis;   
+        unsigned long NoteEndOffset = millis() - RecordingStartMilis;
         unsigned long NoteDuration = NoteEndOffset - NoteStartOffset;
         Serial.println(NoteDuration);
 
-        if(NoteDuration == 0)
+        if (NoteDuration == 0)
         {
             Serial.println("0 DURATION DETECTED");
 
-            nextNoteIndex--;
-            
             return;
         }
 
-        if(NoteDuration > UINT16_MAX)
+        if (NoteDuration > UINT16_MAX)
         {
             StopRecording();
             return;
         }
-        
+
         Notes[nextNoteIndex] = CurrentNote;
         NoteDurations[nextNoteIndex] = NoteDuration;
 
         if (nextNoteIndex != 0)
         {
-            NoteGaps[nextNoteIndex - 1] = NoteStartOffset - PreviousNoteEndOffset;
+            unsigned long NoteGap = NoteStartOffset - PreviousNoteEndOffset;
+
+            if (NoteGap > UINT16_MAX)
+            {
+                StopRecording();
+                return;
+            }
+
+            NoteGaps[nextNoteIndex - 1] = NoteGap;
         }
 
         PreviousNoteEndOffset = NoteEndOffset;
         nextNoteIndex++;
 
-        if(nextNoteIndex == MaxNoteCount)
+        if (nextNoteIndex == MaxNoteCount)
         {
             NotePlayer::StopNote();
             StopRecording();

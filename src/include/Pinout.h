@@ -11,4 +11,6 @@
 #define PIN_BUZZER 12
 
 #define BTN_RECORD 9
+
 #define LED_RECORDSTATUS 13
+#define LED_PLAYING A0
