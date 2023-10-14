@@ -10,7 +10,7 @@ namespace NoteRecorder
 
     unsigned long RecordingStartMilis = 0;
 
-    const int MaxNoteCount = 30;
+    const int MaxNoteCount = 100;
 
     int Notes[MaxNoteCount];
     unsigned short NoteDurations[MaxNoteCount];
