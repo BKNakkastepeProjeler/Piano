@@ -1,8 +1,8 @@
 #include <Arduino.h>
 
-#include "NotePlayer.h"
+#include "Music\NotePlayer.h"
+#include "Input\InputHandler.h"
 #include "Pinout.h"
-#include "InputHandler.h"
 
 namespace InputHandler
 {
@@ -22,7 +22,11 @@ namespace InputHandler
         setInput(PIN_INP5);
         setInput(PIN_INP6);
         setInput(PIN_INP7);
+        
         setInput(BTN_RECORD);
+
+        setInput(BTN_DECREASEOCTAVE);
+        setInput(BTN_INCREASEOCTAVE);
     }
 
     bool GetButtonValue(int PIN)
@@ -30,39 +34,19 @@ namespace InputHandler
         return !digitalRead(PIN);
     }
 
-    bool GetNoteState(int note)
+    bool GetNoteState(int noteIndex)
     {
-        int PIN = -1;
-
-        switch (note)
+        switch (noteIndex)
         {
-        case NOTE_C:
-            PIN = PIN_INP1;
-            break;
-        case NOTE_D:
-            PIN = PIN_INP2;
-            break;
-        case NOTE_E:
-            PIN = PIN_INP3;
-            break;
-        case NOTE_F:
-            PIN = PIN_INP4;
-            break;
-        case NOTE_G:
-            PIN = PIN_INP5;
-            break;
-        case NOTE_A:
-            PIN = PIN_INP6;
-            break;
-        case NOTE_B:
-            PIN = PIN_INP7;
-            break;
+            case 0: return GetButtonValue(PIN_INP1);
+            case 1: return GetButtonValue(PIN_INP2);
+            case 2: return GetButtonValue(PIN_INP3);
+            case 3: return GetButtonValue(PIN_INP4);
+            case 4: return GetButtonValue(PIN_INP5);
+            case 5: return GetButtonValue(PIN_INP6);
+            case 6: return GetButtonValue(PIN_INP7);
+            default: return false;
         }
-
-        if (PIN == -1)
-            return false;
-
-        return GetButtonValue(PIN);
     }
 
 

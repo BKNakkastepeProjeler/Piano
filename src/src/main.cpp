@@ -1,21 +1,28 @@
 #include <Arduino.h>
 
-#include "InputHandler.h"
-#include "StatusLeds.h"
-#include "NotePlayer.h"
-#include "NoteRecorder.h"
 #include "Pinout.h"
+
+#include "Input\InputHandler.h"
+#include "Music\NotePlayer.h"
+#include "Music\NoteRecorder.h"
+#include "Display\LCD.h"
+#include "Music\Notes.h"
 
 void setup()
 {
   Serial.begin(9600);
 
-  StatusLeds::StatusLedsInit();
+  LCD::LCDInit();
   InputHandler::InputHandlerInit();
+
+
+
+  LCD::displayOctave();
 }
 
-void loop()
-{
+void checkRecordButton()
+{  
+  
   InputHandler::ButtonState recordButtonState = InputHandler::GetButtonState(BTN_RECORD);
   if (recordButtonState != InputHandler::None)
   {
@@ -33,6 +40,36 @@ void loop()
       }
     }
   }
+
+}
+
+void checkOctaveButtons()
+{
+  InputHandler::ButtonState increaseOctaveButtonState = InputHandler::GetButtonState(BTN_INCREASEOCTAVE);
+
+  if(increaseOctaveButtonState != InputHandler::None)
+  {
+    Notes::setOctaveByIndex(Notes::getOctaveIndex() + 1);
+    return;
+  }
+
+  InputHandler::ButtonState decreaseOctaveButtonState = InputHandler::GetButtonState(BTN_DECREASEOCTAVE);
+
+  if(decreaseOctaveButtonState != InputHandler::None)
+  {
+    Notes::setOctaveByIndex(Notes::getOctaveIndex() - 1);
+    return;
+  }
+}
+
+
+
+void loop()
+{
+
+  checkOctaveButtons();
+
+  checkRecordButton();
 
   NotePlayer::NoteLoop();
 }

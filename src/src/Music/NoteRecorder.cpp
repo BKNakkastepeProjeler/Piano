@@ -1,8 +1,8 @@
 #include <Arduino.h>
 
-#include "StatusLeds.h"
 #include "Pinout.h"
-#include "NotePlayer.h"
+#include "Music\NotePlayer.h"
+#include "Display\LCD.h"
 
 namespace NoteRecorder
 {
@@ -23,7 +23,7 @@ namespace NoteRecorder
         if (IsRecording || nextNoteIndex == 0)
             return;
 
-        StatusLeds::SetLed(LED_PLAYING, true);
+        LCD::displayRecordState(3);
         Serial.print("Playing recorded // Note Count: ");
         Serial.println(nextNoteIndex);
 
@@ -43,7 +43,7 @@ namespace NoteRecorder
             }
         }
 
-        StatusLeds::SetLed(LED_PLAYING, false);
+        LCD::displayRecordState(4);
     }
 
     void StartRecording()
@@ -52,7 +52,7 @@ namespace NoteRecorder
             return;
         nextNoteIndex = 0;
         IsRecording = true;
-        StatusLeds::SetLed(LED_RECORDSTATUS, true);
+        LCD::displayRecordState(1);
         RecordingStartMilis = millis();
     }
 
@@ -62,10 +62,14 @@ namespace NoteRecorder
             return;
         IsRecording = false;
 
-        if (nextNoteIndex == 0)
-            StatusLeds::SetLed(LED_RECORDSTATUS, false);
-        else
-            StatusLeds::BlinkLed(LED_RECORDSTATUS, 5, 100);
+
+        if(nextNoteIndex != 0)
+        {
+            LCD::displayRecordState(2);
+            delay(800);
+        }
+
+        LCD::displayRecordState(0);
     }
 
     unsigned long PreviousNoteEndOffset = 0;
