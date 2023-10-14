@@ -1,8 +1,16 @@
 #pragma once
 
 namespace InputHandler
-{
+{   
+    enum ButtonState
+    {
+        None,
+        Down,
+        Hold
+    };
+
+    bool GetButtonValue(int PIN);
     bool GetNoteState(int note);
     void InputHandlerInit();
-    bool GetButtonState(int PIN);
+    ButtonState GetButtonState(int PIN);
 }

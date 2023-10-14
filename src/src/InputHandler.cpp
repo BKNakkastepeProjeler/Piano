@@ -2,15 +2,10 @@
 
 #include "NotePlayer.h"
 #include "Pinout.h"
+#include "InputHandler.h"
 
 namespace InputHandler
 {
-    enum ButtonState
-    {
-        None,
-        Down,
-        Hold
-    };
 
     void setInput(uint8_t pin)
     {
@@ -28,6 +23,11 @@ namespace InputHandler
         setInput(PIN_INP6);
         setInput(PIN_INP7);
         setInput(BTN_RECORD);
+    }
+
+    bool GetButtonValue(int PIN)
+    {
+        return !digitalRead(PIN);
     }
 
     bool GetNoteState(int note)
@@ -62,13 +62,31 @@ namespace InputHandler
         if (PIN == -1)
             return false;
 
-        return !digitalRead(PIN);
+        return GetButtonValue(PIN);
     }
 
-    // TODO: Add hold detection to trigger Play Recorded
-    bool GetButtonState(int PIN)
+
+    ButtonState GetButtonState(int PIN)
     {
-        return !digitalRead(PIN);
+        const int HoldDuration = 1000;
+
+
+        unsigned int inputDuration = 0;
+
+        while (GetButtonValue(PIN))
+        {
+            inputDuration += 10;
+
+            if(inputDuration == HoldDuration) break;
+
+            delay(10);
+        }
+
+        if (inputDuration == 0) return None;
+        if(inputDuration == 1000) return Hold;
+        return Down;
     }
+
+
 
 }

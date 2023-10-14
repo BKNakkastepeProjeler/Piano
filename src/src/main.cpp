@@ -14,21 +14,25 @@ void setup()
   InputHandler::InputHandlerInit();
 }
 
-
 void loop()
 {
-  bool recordButtonState = InputHandler::GetButtonState(BTN_RECORD);
-  if(recordButtonState)
+  InputHandler::ButtonState recordButtonState = InputHandler::GetButtonState(BTN_RECORD);
+  if (recordButtonState != InputHandler::None)
   {
-
-    switch (NoteRecorder::IsRecording)
+    if (recordButtonState == InputHandler::Hold) NoteRecorder::PlayRecorded();
+    else
     {
-      case true: NoteRecorder::StopRecording(); break;
-      case false: NoteRecorder::StartRecording(); break;
+      switch (NoteRecorder::IsRecording)
+      {
+      case true:
+        NoteRecorder::StopRecording();
+        break;
+      case false:
+        NoteRecorder::StartRecording();
+        break;
+      }
     }
-
-    delay(300);
   }
-  
+
   NotePlayer::NoteLoop();
 }
