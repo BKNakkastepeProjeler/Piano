@@ -1,75 +1,107 @@
 #include "Display\LCD.h"
 
 namespace Notes
-{    
-    
+{
+
     const int allNotes[] = {
-        33,
-        37,
-        41,
-        44,
-        49,
-        55,
-        62,
-
-        65,
-        73,
-        82,
-        87,
-        98,
-        110,
-        123,
-
-        131,
-        147,
-        165,
-        175,
-        196,
-        220,
-        247,
-
-        262,
-        294,
-        330,
-        349,
-        392,
-        440,
-        494,
-
-        523,
-        587,
-        659,
-        698,
-        784,
-        880,
-        988,
-
-        1047,
-        1175,
-        1319,
-        1397,
-        1568,
-        1760,
-        1976,
-
-        2093,
-        2349,
-        2637,
-        2794,
-        3136,
-        3520,
-        3951};
+            33,
+            35,
+            37,
+            39,
+            41,
+            44,
+            46,
+            49,
+            52,
+            55,
+            58,
+            62,
+            65,
+            69,
+            73,
+            78,
+            82,
+            87,
+            93,
+            98,
+            104,
+            110,
+            117,
+            123,
+            131,
+            139,
+            147,
+            156,
+            165,
+            175,
+            185,
+            196,
+            208,
+            220,
+            233,
+            247,
+            262,
+            277,
+            294,
+            311,
+            330,
+            349,
+            370,
+            392,
+            415,
+            440,
+            466,
+            494,
+            523,
+            554,
+            587,
+            622,
+            659,
+            698,
+            740,
+            784,
+            831,
+            880,
+            932,
+            988,
+            1047,
+            1109,
+            1175,
+            1245,
+            1319,
+            1397,
+            1480,
+            1568,
+            1661,
+            1760,
+            1865,
+            1976,
+            2093,
+            2217,
+            2349,
+            2489,
+            2637,
+            2794,
+            2960,
+            3136,
+            3322,
+            3520,
+            3729,
+            3951
+            };
 
     const int minOctaveIndex = 0;
-    const int maxOctaveIndex = 6;
+    const int maxOctaveIndex = 11;
 
+    const int minNoteIndex = 0;
+    const int maxNoteIndex = 11;
 
     int octaveIndex = 4;
 
-
     void setOctaveByIndex(int octIndex)
     {
-        if(octIndex < minOctaveIndex || octIndex > maxOctaveIndex) return;
+        if (octIndex < minOctaveIndex || octIndex > maxOctaveIndex)
+            return;
 
         octaveIndex = octIndex;
         LCD::displayOctave();
@@ -82,9 +114,10 @@ namespace Notes
 
     int getNote(int octaveNoteIndex)
     {
-        if(octaveIndex < 0 || octaveIndex > 6) return 0;
+        if (octaveIndex < minOctaveIndex || octaveIndex > maxOctaveIndex)
+            return 0;
 
-        int noteIndex = (octaveIndex * 7) + octaveNoteIndex;
+        int noteIndex = (octaveIndex * 12) + octaveNoteIndex;
 
         return allNotes[noteIndex];
     }

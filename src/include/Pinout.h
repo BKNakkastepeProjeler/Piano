@@ -1,13 +1,17 @@
 #pragma once
 
-#define PIN_INP1 2
-#define PIN_INP2 3
-#define PIN_INP3 4
-#define PIN_INP4 5
-#define PIN_INP5 6
-#define PIN_INP6 7
-#define PIN_INP7 8
-#define PIN_INPCOMMON 9
+#define PIN_BTNINP1 2
+#define PIN_BTNINP2 3
+#define PIN_BTNINP3 4
+#define PIN_BTNINP4 5
+#define PIN_BTNINP5 6
+#define PIN_BTNINP6 7
+#define PIN_BTNINP7 8
+#define PIN_BTNINP8 9
+#define PIN_BTNINP9 0
+#define PIN_BTNINP10 0
+#define PIN_BTNINP11 0
+#define PIN_BTNINP12 0
 
 #define PIN_BUZZER 12
 

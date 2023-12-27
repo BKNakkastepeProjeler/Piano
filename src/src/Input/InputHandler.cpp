@@ -5,23 +5,27 @@
 #include "Pinout.h"
 
 #include <CapacitiveSensor.h>
-
+#include "Music\Notes.h"
 namespace InputHandler
 {
     const int threshold = 100;
     const int samples = 10000;
 
-    CapacitiveSensor caps[] =
-        {
-            CapacitiveSensor(PIN_INPCOMMON, PIN_INP1),
-            CapacitiveSensor(PIN_INPCOMMON, PIN_INP2),
-            CapacitiveSensor(PIN_INPCOMMON, PIN_INP3),
-            CapacitiveSensor(PIN_INPCOMMON, PIN_INP4),
-            CapacitiveSensor(PIN_INPCOMMON, PIN_INP5),
-            CapacitiveSensor(PIN_INPCOMMON, PIN_INP6),
-            CapacitiveSensor(PIN_INPCOMMON, PIN_INP7)
-        };
-
+    const int notePins[] =
+    {
+        PIN_BTNINP1,
+        PIN_BTNINP2,
+        PIN_BTNINP3,
+        PIN_BTNINP4,
+        PIN_BTNINP5,
+        PIN_BTNINP6,
+        PIN_BTNINP7,
+        PIN_BTNINP8,
+        PIN_BTNINP9,
+        PIN_BTNINP10,
+        PIN_BTNINP11,
+        PIN_BTNINP12
+    };
 
     void setInputButton(uint8_t pin)
     {
@@ -29,47 +33,25 @@ namespace InputHandler
         digitalWrite(pin, HIGH);
     }
 
-    void setCaps()
-    {
-        for (size_t i = 0; i < 7; i++)
-        {
-            caps[i].set_CS_AutocaL_Millis(0xFFFFFFFF);
-        }
-    }
-
-    void DebugPrintLoop()
-    {
-        while (true)
-        {
-            String s1 = String(caps[0].capacitiveSensor(samples));
-            String s2 = String(caps[1].capacitiveSensor(samples));
-            String s3 = String(caps[2].capacitiveSensor(samples));
-            String s4 = String(caps[3].capacitiveSensor(samples));
-            String s5 = String(caps[4].capacitiveSensor(samples));
-            String s6 = String(caps[5].capacitiveSensor(samples));
-            String s7 = String(caps[6].capacitiveSensor(samples));
-
-            Serial.println(s1 + " // " + s2 + " // " + s3 + " // " + s4 + " // " + s5 + " // " + s6 + " // " + s7);
-        }
-        
-    }
-
     void InputHandlerInit()
     {
-        setCaps();
 
         setInputButton(BTN_RECORD);
 
         setInputButton(BTN_DECREASEOCTAVE);
         setInputButton(BTN_INCREASEOCTAVE);
 
-        //DebugPrintLoop();
+        for(int i = 0; i < sizeof(notePins) / sizeof(int); i++)
+        {
+            setInputButton(notePins[i]);
+        }
     }
 
     bool GetButtonValue(int PIN)
     {
         return !digitalRead(PIN);
     }
+
     ButtonState GetButtonState(int PIN)
     {
         const int HoldDuration = 1000;
@@ -95,9 +77,9 @@ namespace InputHandler
 
     bool GetNoteState(int noteIndex)
     {
-        if(noteIndex < 0 || noteIndex > 6) return false;
+        if(noteIndex < Notes::minNoteIndex || noteIndex > Notes::maxNoteIndex) return false;
 
-        return caps[noteIndex].capacitiveSensor(samples) > threshold;
+        return GetButtonValue(noteIndex);
     }
 
 

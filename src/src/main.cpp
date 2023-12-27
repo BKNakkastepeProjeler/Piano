@@ -26,6 +26,7 @@ void checkRecordButton()
   InputHandler::ButtonState recordButtonState = InputHandler::GetButtonState(BTN_RECORD);
   if (recordButtonState != InputHandler::None)
   {
+    Serial.println("Rec");
     if (recordButtonState == InputHandler::Hold) NoteRecorder::PlayRecorded();
     else
     {
@@ -49,6 +50,7 @@ void checkOctaveButtons()
 
   if(increaseOctaveButtonState != InputHandler::None)
   {
+    Serial.println("Inc Oct Btn");
     Notes::setOctaveByIndex(Notes::getOctaveIndex() + 1);
     return;
   }
@@ -57,6 +59,7 @@ void checkOctaveButtons()
 
   if(decreaseOctaveButtonState != InputHandler::None)
   {
+    Serial.println("Dec Oct Btn");
     Notes::setOctaveByIndex(Notes::getOctaveIndex() - 1);
     return;
   }
@@ -66,7 +69,6 @@ void checkOctaveButtons()
 
 void loop()
 {
-
   checkOctaveButtons();
 
   checkRecordButton();

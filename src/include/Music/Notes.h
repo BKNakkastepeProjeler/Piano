@@ -8,4 +8,8 @@ namespace Notes
 
     int getNote(int octaveNoteIndex);
 
+    const int minOctaveIndex;
+    const int maxOctaveIndex;
+    const int minNoteIndex;
+    const int maxNoteIndex;
 }
